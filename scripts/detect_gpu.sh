@@ -2,13 +2,11 @@
 
 LOG_FILE="logs/gameframe.log"
 
-# Check for lspci
 if ! command -v lspci &> /dev/null; then
     echo "[$(date)] ERROR: lspci not found" >> "$LOG_FILE"
     exit 1
 fi
 
-# Detect GPU vendor and model
 GPU_INFO=$(lspci | grep -iE 'VGA|3D')
 if echo "$GPU_INFO" | grep -i nvidia > /dev/null; then
     VENDOR="nvidia"
@@ -24,7 +22,6 @@ else
     MODEL="Unknown GPU"
 fi
 
-# Check driver version
 DRIVER_VERSION=""
 if [ "$VENDOR" = "nvidia" ]; then
     DRIVER_VERSION=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null || echo "Unknown")
@@ -34,12 +31,8 @@ elif [ "$VENDOR" = "intel" ]; then
     DRIVER_VERSION=$(glxinfo | grep "OpenGL version" | awk '{print $4}' 2>/dev/null || echo "Unknown")
 fi
 
-# Check Vulkan support
 VULKAN_VERSION=$(vulkaninfo --summary 2>/dev/null | grep 'apiVersion' | awk '{print $3}' || echo "Not supported")
-
-# Check OpenGL support
 OPENGL_VERSION=$(glxinfo | grep "OpenGL version" | awk '{print $4}' 2>/dev/null || echo "Not supported")
 
-# Output JSON for easier parsing
 echo "{\"vendor\":\"$VENDOR\",\"model\":\"$MODEL\",\"driver_version\":\"$DRIVER_VERSION\",\"vulkan_version\":\"$VULKAN_VERSION\",\"opengl_version\":\"$OPENGL_VERSION\"}" >> "$LOG_FILE"
-echo "$VENDOR"
+echo "{\"vendor\":\"$VENDOR\",\"model\":\"$MODEL\",\"driver_version\":\"$DRIVER_VERSION\",\"vulkan_version\":\"$VULKAN_VERSION\",\"opengl_version\":\"$OPENGL_VERSION\"}"

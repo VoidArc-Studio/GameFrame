@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::gpu::{VulkanBackend, OpenGLBackend};
+use crate::gpu::{VulkanBackend, OpenGLBackend, WaylandBackend};
 use std::process::Command;
 
 pub struct Compositor {
@@ -13,10 +13,13 @@ pub trait RenderBackend {
 
 impl Compositor {
     pub fn new(config: &Config) -> Self {
-        let backend: Box<dyn RenderBackend> = match config.rendering.backend.as_str() {
-            "vulkan" => Box::new(VulkanBackend::new(config)),
-            "opengl" => Box::new(OpenGLBackend::new(config)),
-            _ => panic!("Unsupported backend"),
+        let backend: Box<dyn RenderBackend> = match config.display_backend.as_str() {
+            "wayland" => Box::new(WaylandBackend::new(config)),
+            _ => match config.rendering.backend.as_str() {
+                "vulkan" => Box::new(VulkanBackend::new(config)),
+                "opengl" => Box::new(OpenGLBackend::new(config)),
+                _ => panic!("Unsupported backend"),
+            },
         };
         Compositor { config: config.clone(), backend }
     }
@@ -30,7 +33,6 @@ impl Compositor {
     }
 
     pub fn run(&mut self) {
-        // Call C++ frame timer via FFI
         unsafe {
             crate::cpp::start_frame_timer(self.config.rendering.max_fps);
         }

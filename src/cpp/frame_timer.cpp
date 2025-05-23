@@ -7,7 +7,6 @@ extern "C" {
         auto frame_time = std::chrono::microseconds(1000000 / max_fps);
         while (true) {
             auto start = std::chrono::high_resolution_clock::now();
-            // Simulate frame processing
             std::this_thread::sleep_for(frame_time);
             auto end = std::chrono::high_resolution_clock::now();
             auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(end - start);

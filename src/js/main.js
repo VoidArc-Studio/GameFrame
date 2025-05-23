@@ -4,8 +4,8 @@ const { exec } = require('child_process');
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 1000,
-        height: 700,
+        width: 1200,
+        height: 800,
         webPreferences: {
             preload: path.join(__dirname, 'renderer.js'),
             nodeIntegration: true,
@@ -15,9 +15,10 @@ function createWindow() {
     win.loadFile('index.html');
 }
 
-// Handle launch request from renderer
-ipcMain.on('launch-gameframe', (event) => {
-    exec('bash ../scripts/launch.sh', (error, stdout, stderr) => {
+// Handle launch request with profile
+ipcMain.on('launch-gameframe', (event, profile) => {
+    const command = profile === 'default' ? 'bash ../scripts/launch.sh' : `bash ../scripts/launch.sh ${profile}`;
+    exec(command, (error, stdout, stderr) => {
         if (error) {
             event.reply('launch-result', `Error launching GameFrame: ${stderr}`);
             return;

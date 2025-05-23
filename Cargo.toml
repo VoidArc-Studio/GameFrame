@@ -6,13 +6,12 @@ edition = "2021"
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-ash = "0.37"
-glutin = "0.29"
-winit = "0.27"
-gl = "0.14"
-# Note: wlroots bindings require FFI and are not directly available in Rust crates.
-# Use a hypothetical wlroots-sys crate or manual FFI bindings.
-wlroots-sys = { version = "0.16", optional = true }
+clap = { version = "4.0", features = ["derive"] }  # CLI parsing
+sysinfo = "0.29"                                  # System info
+log = "0.4"                                       # Logging
+env_logger = "0.10"                               # Logging to file
+nix = "0.26"                                      # Namespaces
+anyhow = "1.0"                                    # Error handling
 
 [features]
 wayland = ["wlroots-sys"]

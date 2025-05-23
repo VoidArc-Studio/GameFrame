@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>GameFrame Configurator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>GameFrame Configuration</h1>
+    <form id="config-form">
+        <label for="environment">Environment:</label>
+        <select id="environment">
+            <option value="gnome">GNOME</option>
+            <option value="kde">KDE</option>
+            <option value="steam-gamepadui">Steam GamepadUI</option>
+            <option value="heroic">Heroic</option>
+            <option value="lutris">Lutris</option>
+        </select><br>
+        <label for="resolution">Resolution:</label>
+        <input type="text" id="resolution" value="1920x1080"><br>
+        <label for="fullscreen">Fullscreen:</label>
+        <input type="checkbox" id="fullscreen" checked><br>
+        <label for="backend">Rendering Backend:</label>
+        <select id="backend">
+            <option value="vulkan">Vulkan</option>
+            <option value="opengl">OpenGL</option>
+        </select><br>
+        <label for="vsync">VSync:</label>
+        <input type="checkbox" id="vsync" checked><br>
+        <label for="max_fps">Max FPS:</label>
+        <input type="number" id="max_fps" value="144"><br>
+        <label for="vendor">GPU Vendor:</label>
+        <select id="vendor">
+            <option value="auto">Auto</option>
+            <option value="nvidia">NVIDIA</option>
+            <option value="amd">AMD</option>
+            <option value="intel">Intel</option>
+        </select><br>
+        <label for="opengl_version">OpenGL Version:</label>
+        <input type="text" id="opengl_version" value="2.1"><br>
+        <label for="vulkan_version">Vulkan Version:</label>
+        <input type="text" id="vulkan_version" value="1.3"><br>
+        <button type="submit">Save</button>
+    </form>
+    <script src="renderer.js"></script>
+</body>
+</html>

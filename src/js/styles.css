@@ -1,196 +1,67 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    background: url('assets/background.jpg') no-repeat center center fixed;
+    font-family: Arial, sans-serif;
+    background-image: url('assets/background.jpg');
     background-size: cover;
-    color: #ffffff;
-    margin: 0;
-    padding: 20px;
+    color: #fff;
     display: flex;
     justify-content: center;
-    overflow-y: auto;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
 .container {
-    background: rgba(0, 0, 0, 0.85);
-    border-radius: 15px;
-    padding: 30px;
-    max-width: 1000px;
-    width: 100%;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.7);
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 600px;
 }
 
 .logo {
-    width: 120px;
-    margin: 0 auto;
-    display: block;
-    transition: transform 0.3s;
-}
-
-.logo:hover {
-    transform: scale(1.1);
-}
-
-h1, h2 {
-    text-align: center;
-    color: #00ffff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-}
-
-.system-info {
-    margin-bottom: 30px;
-    padding: 20px;
-    border: 2px solid #00ffff;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.info-card {
-    background: rgba(0, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 8px;
-    transition: transform 0.3s;
-}
-
-.info-card:hover {
-    transform: translateY(-5px);
-}
-
-.info-card h3 {
-    margin: 0 0 10px;
-    color: #00ffff;
-}
-
-.system-info button {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin: 15px auto 0;
-    padding: 10px 20px;
-    background: #00ffff;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.system-info button img {
-    width: 20px;
-}
-
-.system-info button:hover {
-    background: #00cccc;
-}
-
-.config-section {
-    padding: 20px;
-    border: 2px solid #00ffff;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.form-group {
+    width: 100px;
     margin-bottom: 20px;
 }
 
-.form-group label {
-    font-weight: bold;
-    color: #00ffff;
-    display: block;
-    margin-bottom: 8px;
+h1, h2 {
+    margin: 10px 0;
 }
 
-.form-group select, .form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #00ffff;
+.config-section {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+label {
+    margin-right: 10px;
+}
+
+select, input[type="number"], input[type="checkbox"] {
+    padding: 5px;
     border-radius: 5px;
-    background: #222;
+    border: none;
+    background: #333;
     color: #fff;
-    transition: border-color 0.3s;
 }
 
-.form-group select:focus, .form-group input:focus {
-    border-color: #00cccc;
-    outline: none;
-}
-
-.profile-controls {
-    display: flex;
-    gap: 10px;
-}
-
-.profile-controls select {
-    flex: 1;
-}
-
-.profile-controls button {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 12px;
-    background: #00ffff;
-    color: #000;
+button {
+    background: none;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    margin: 0 10px;
 }
 
-.profile-controls button img {
-    width: 20px;
+button img {
+    width: 24px;
 }
 
-.profile-controls button:hover {
-    background: #00cccc;
+.system-info {
+    margin-top: 20px;
+    text-align: left;
 }
 
-.form-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.form-actions button {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 12px 20px;
-    background: #00ffff;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.form-actions button img {
-    width: 20px;
-}
-
-.form-actions button:hover {
-    background: #00cccc;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 15px;
-    }
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-    .form-group select, .form-group input, .form-actions button {
-        padding: 10px;
-    }
+.actions {
+    margin-top: 20px;
 }

@@ -1,6 +1,6 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
     pub environment: String,
     pub resolution: String,
@@ -13,7 +13,7 @@ pub struct Config {
     pub gpu: GpuConfig,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct RenderingConfig {
     pub backend: String,
     pub vsync: bool,
@@ -21,7 +21,7 @@ pub struct RenderingConfig {
     pub filter: String,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct GpuConfig {
     pub vendor: String,
     pub opengl_version: String,

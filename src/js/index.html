@@ -6,42 +6,92 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>GameFrame Configuration</h1>
-    <form id="config-form">
-        <label for="environment">Environment:</label>
-        <select id="environment">
-            <option value="gnome">GNOME</option>
-            <option value="kde">KDE</option>
-            <option value="steam-gamepadui">Steam GamepadUI</option>
-            <option value="heroic">Heroic</option>
-            <option value="lutris">Lutris</option>
-        </select><br>
-        <label for="resolution">Resolution:</label>
-        <input type="text" id="resolution" value="1920x1080"><br>
-        <label for="fullscreen">Fullscreen:</label>
-        <input type="checkbox" id="fullscreen" checked><br>
-        <label for="backend">Rendering Backend:</label>
-        <select id="backend">
-            <option value="vulkan">Vulkan</option>
-            <option value="opengl">OpenGL</option>
-        </select><br>
-        <label for="vsync">VSync:</label>
-        <input type="checkbox" id="vsync" checked><br>
-        <label for="max_fps">Max FPS:</label>
-        <input type="number" id="max_fps" value="144"><br>
-        <label for="vendor">GPU Vendor:</label>
-        <select id="vendor">
-            <option value="auto">Auto</option>
-            <option value="nvidia">NVIDIA</option>
-            <option value="amd">AMD</option>
-            <option value="intel">Intel</option>
-        </select><br>
-        <label for="opengl_version">OpenGL Version:</label>
-        <input type="text" id="opengl_version" value="2.1"><br>
-        <label for="vulkan_version">Vulkan Version:</label>
-        <input type="text" id="vulkan_version" value="1.3"><br>
-        <button type="submit">Save</button>
-    </form>
+    <div class="container">
+        <img src="assets/logo.png" alt="GameFrame Logo" class="logo">
+        <h1>GameFrame Configurator</h1>
+        
+        <!-- System Information -->
+        <div class="system-info">
+            <h2>System Information</h2>
+            <p id="gpu-vendor">GPU Vendor: Detecting...</p>
+            <p id="available-resolutions">Available Resolutions: Detecting...</p>
+        </div>
+        
+        <!-- Configuration Form -->
+        <form id="config-form">
+            <h2>Configuration</h2>
+            <div class="form-group">
+                <label for="profile">Config Profile:</label>
+                <select id="profile">
+                    <option value="default">Default</option>
+                    <!-- Populated dynamically -->
+                </select>
+                <button type="button" id="save-profile">Save Profile</button>
+                <button type="button" id="load-profile">Load Profile</button>
+            </div>
+            <div class="form-group">
+                <label for="environment" title="Select the gaming environment to launch">Environment:</label>
+                <select id="environment">
+                    <option value="gnome">GNOME</option>
+                    <option value="kde">KDE</option>
+                    <option value="steam-gamepadui">Steam GamepadUI</option>
+                    <option value="heroic">Heroic</option>
+                    <option value="lutris">Lutris</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="resolution" title="Screen resolution (e.g., 1920x1080)">Resolution:</label>
+                <select id="resolution">
+                    <option value="1920x1080">1920x1080</option>
+                    <option value="1280x720">1280x720</option>
+                    <option value="2560x1440">2560x1440</option>
+                    <!-- Populated dynamically if possible -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fullscreen" title="Enable fullscreen mode">Fullscreen:</label>
+                <input type="checkbox" id="fullscreen" checked>
+            </div>
+            <div class="form-group">
+                <label for="backend" title="Rendering backend (Vulkan for modern GPUs, OpenGL for older ones)">Rendering Backend:</label>
+                <select id="backend">
+                    <option value="vulkan">Vulkan</option>
+                    <option value="opengl">OpenGL</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vsync" title="Enable vertical sync to reduce screen tearing">VSync:</label>
+                <input type="checkbox" id="vsync" checked>
+            </div>
+            <div class="form-group">
+                <label for="max_fps" title="Maximum frames per second">Max FPS:</label>
+                <input type="number" id="max_fps" value="144" min="30" max="240">
+            </div>
+            <div class="form-group">
+                <label for="vendor" title="Select GPU vendor or auto-detect">GPU Vendor:</label>
+                <select id="vendor">
+                    <option value="auto">Auto</option>
+                    <option value="nvidia">NVIDIA</option>
+                    <option value="amd">AMD</option>
+                    <option value="intel">Intel</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="opengl_version" title="OpenGL version for compatibility">OpenGL Version:</label>
+                <input type="text" id="opengl_version" value="2.1">
+            </div>
+            <div class="form-group">
+                <label for="vulkan_version" title="Vulkan version for modern GPUs">Vulkan Version:</label>
+                <input type="text" id="vulkan_version" value="1.3">
+            </div>
+            <div class="form-actions">
+                <button type="submit">Save Configuration</button>
+                <button type="button" id="launch-gameframe">Launch GameFrame</button>
+            </div>
+        </form>
+    </div>
+    <script src="system_info.js"></script>
+    <script src="config_manager.js"></script>
     <script src="renderer.js"></script>
 </body>
 </html>

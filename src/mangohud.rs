@@ -8,6 +8,6 @@ pub fn init_mangohud() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn update_hud() -> Result<(), Box<dyn std::error::Error>> {
-    // Placeholder: Aktualizacja HUD (może wymagać integracji z MangoHud API)
+    println!("Aktualizacja MangoHud");
     Ok(())
 }

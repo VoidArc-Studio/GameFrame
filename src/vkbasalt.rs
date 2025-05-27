@@ -2,7 +2,7 @@ use std::env;
 
 pub fn init_vkbasalt() -> Result<(), Box<dyn std::error::Error>> {
     env::set_var("ENABLE_VKBASALT", "1");
-    env::set_var("VKBASALT_CONFIG_FILE", "/path/to/config/vkbasalt.conf");
+    env::set_var("VKBASALT_CONFIG_FILE", "/home/user/.config/gameframe/vkbasalt.conf");
     println!("vkBasalt włączony");
     Ok(())
 }

@@ -1,0 +1,20 @@
+[Unit]
+Description=GameFrame TTY Session
+After=network.target
+
+[Service]
+Type=simple
+User=1000
+Group=1000
+ExecStart=/usr/local/bin/gameframe 1920x1080 4k ++ steam -gamepadui
+Environment="XDG_RUNTIME_DIR=/run/user/1000" "WAYLAND_DISPLAY=wayland-0"
+Restart=on-failure
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+StandardInput=tty
+StandardOutput=tty
+StandardError=tty
+
+[Install]
+WantedBy=multi-user.target

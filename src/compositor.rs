@@ -6,6 +6,7 @@ use smithay::{
         compositor::CompositorState,
         output::OutputManagerState,
         shell::xdg::XdgShellState,
+        shell::wlr_layer::WlrLayerShellState,
     },
     utils::Size,
 };
@@ -15,6 +16,7 @@ pub struct GameFrameCompositor {
     compositor_state: CompositorState,
     output_manager: OutputManagerState,
     xdg_shell_state: XdgShellState,
+    layer_shell_state: WlrLayerShellState,
     resolution: Size<i32, smithay::utils::Physical>,
     quality: String,
 }
@@ -24,6 +26,7 @@ impl GameFrameCompositor {
         let compositor_state = CompositorState::new::<Self, _>(display, None);
         let output_manager = OutputManagerState::new_with_xdg_output::<Self>(display);
         let xdg_shell_state = XdgShellState::new::<Self, _>(display, None);
+        let layer_shell_state = WlrLayerShellState::new::<Self, _>(display, None);
         let space = Space::new();
 
         GameFrameCompositor {
@@ -31,6 +34,7 @@ impl GameFrameCompositor {
             compositor_state,
             output_manager,
             xdg_shell_state,
+            layer_shell_state,
             resolution: Size::from((width, height)),
             quality,
         }

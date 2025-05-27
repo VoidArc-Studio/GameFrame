@@ -10,67 +10,78 @@ use smithay::{
 };
 use std::process::Command;
 
+mod compositor;
+mod gpu;
+mod scaling;
+mod xwayland;
+mod steam;
+mod gui;
+mod ai;
+mod vkbasalt;
+mod mangohud;
+mod gamemode;
+
+use compositor::GameFrameCompositor;
+use gui::GameFrameGui;
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Inicjalizacja Wayland
     let mut display = Display::new()?;
-    let mut state = GameFrameState::new(&mut display);
+    let mut compositor = GameFrameCompositor::new(&mut display);
 
     // Backend Winit dla Wayland
     let (mut winit_backend, mut winit_input) = WinitBackend::new()?;
     let mut renderer = winit_backend.renderer();
 
-    // Obsługa XWayland
+    // Backend XWayland
     let x11_backend = X11Backend::new()?;
     let x11_display = x11_backend.display();
+
+    // Inicjalizacja GUI (opcjonalne)
+    let mut gui = GameFrameGui::new();
+
+    // Inicjalizacja vkBasalt, MangoHud, GameMode
+    vkbasalt::init_vkbasalt()?;
+    mangohud::init_mangohud()?;
+    gamemode::start_gamemode()?;
 
     // Główna pętla zdarzeń
     loop {
         // Przetwarzanie zdarzeń Wayland
-        display.dispatch_clients(&mut state)?;
+        display.dispatch_clients(&mut compositor)?;
 
         // Przetwarzanie zdarzeń Winit
         winit_input.dispatch_new_events(|event| match event {
             WinitEvent::Resized { size, .. } => {
                 println!("Okno zmienione na: {:?}", size);
-                // Aktualizacja rozdzielczości
-                state.resize(size);
+                compositor.resize(size);
             }
             WinitEvent::CloseRequested => {
                 println!("Zamykanie aplikacji");
+                gamemode::stop_gamemode()?;
                 break;
             }
             _ => {}
         })?;
 
         // Przetwarzanie zdarzeń X11
-        x11_backend.dispatch(&mut state)?;
+        x11_backend.dispatch(&mut compositor)?;
 
-        // Renderowanie
-        renderer.render(|_renderer, _frame| {
-            // Logika renderowania (np. skalowanie FSR/NIS)
+        // Renderowanie z vkBasalt
+        renderer.render(|renderer, frame| {
+            vkbasalt::apply_post_processing(renderer, frame)?;
             Ok(())
         })?;
+
+        // Monitorowanie wydajności z MangoHud
+        mangohud::update_hud()?;
+
+        // Optymalizacja AI
+        ai::optimize_game(&compositor)?;
+
+        // Renderowanie GUI
+        gui.render(&mut renderer)?;
     }
 
     Ok(())
-}
-
-struct GameFrameState {
-    windows: Vec<Window>,
-    resolution: Size<i32, smithay::utils::Physical>,
-}
-
-impl GameFrameState {
-    fn new(display: &mut Display) -> Self {
-        GameFrameState {
-            windows: Vec::new(),
-            resolution: Size::from((1280, 720)),
-        }
-    }
-
-    fn resize(&mut self, size: Size<i32, smithay::utils::Physical>) {
-        self.resolution = size;
-        // Logika spoofingu rozdzielczości
-        println!("Nowa rozdzielczość: {:?}", self.resolution);
-    }
 }

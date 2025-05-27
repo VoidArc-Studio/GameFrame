@@ -1,0 +1,15 @@
+[package]
+name = "gameframe"
+version = "0.1.0"
+edition = "2025"
+
+[dependencies]
+smithay = { version = "0.3", features = ["backend_winit", "backend_x11", "desktop"] }
+ash = "0.37"
+egui = "0.27"
+eframe = "0.27" # Dla egui z obsługą okien
+sysinfo = "0.29"
+clap = { version = "4.4", features = ["derive"] }
+nix = "0.26"
+log = "0.4"
+env_logger = "0.10"

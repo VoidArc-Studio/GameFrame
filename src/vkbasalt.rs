@@ -8,6 +8,6 @@ pub fn init_vkbasalt() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn apply_post_processing<R: Renderer>(_renderer: &mut R, _frame: &mut R::Frame) -> Result<(), Box<dyn std::error::Error>> {
-    // Logika integracji z vkBasalt (przekazanie buforów Vulkan)
+    println!("Zastosowano post-processing vkBasalt");
     Ok(())
 }

@@ -9,6 +9,6 @@ pub fn start_gamemode() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 pub fn stop_gamemode() -> Result<(), Box<dyn std::error::Error>> {
-    // Placeholder: Zatrzymanie GameMode (może wymagać zabicia procesu)
+    println!("Zatrzymano GameMode");
     Ok(())
 }

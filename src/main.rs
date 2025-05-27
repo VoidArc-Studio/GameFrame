@@ -21,9 +21,11 @@ mod ai;
 mod vkbasalt;
 mod mangohud;
 mod gamemode;
+mod tty;
 
 use compositor::GameFrameCompositor;
 use gui::GameFrameGui;
+use tty::init_tty_session;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -36,7 +38,7 @@ struct Args {
     #[arg(default_value = "")]
     options: String,
     /// Aplikacja do uruchomienia, np. "steam -gamepadui"
-    #[arg(default_value = "")]
+    #[arg(default_value = "steam -gamepadui")]
     application: String,
 }
 
@@ -49,6 +51,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (width, height) = parse_resolution(&args.resolution)?;
     let quality = parse_quality(&args.quality);
     let (use_vkbasalt, use_mangohud, use_gamemode) = parse_options(&args.options);
+
+    // Inicjalizacja sesji TTY
+    init_tty_session()?;
 
     // Inicjalizacja Wayland
     let mut display = Display::new()?;
@@ -73,12 +78,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         gamemode::start_gamemode()?;
     }
 
-    // Uruchomienie aplikacji (np. Steam)
-    if !args.application.is_empty() {
-        steam::launch_application(&args.application)?;
-    }
+    // Uruchomienie aplikacji
+    steam::launch_application(&args.application)?;
 
-    // Inicjalizacja GUI (opcjonalne)
+    // Inicjalizacja GUI
     let mut gui = GameFrameGui::new(quality);
 
     // Główna pętla zdarzeń
@@ -143,14 +146,14 @@ fn parse_quality(quality: &str) -> String {
         "4k" => "FSR".to_string(),
         "high" => "Bilinear".to_string(),
         "low" => "Integer".to_string(),
-        _ => "FSR".to_string(), // Domyślne
+        _ => "FSR".to_string(),
     }
 }
 
 fn parse_options(options: &str) -> (bool, bool, bool) {
     let options = options.to_lowercase();
     if options.contains("++") {
-        (true, true, true) // Włącz wszystko
+        (true, true, true)
     } else {
         (
             options.contains("+vk"),

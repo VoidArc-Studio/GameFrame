@@ -23,4 +23,5 @@ cat <<EOL > ~/.config/gameframe/gameframe.conf
 default_resolution=1920x1080
 default_quality=4k
 default_options=++
+default_application=steam -gamepadui
 EOL

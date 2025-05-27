@@ -1,3 +1,4 @@
+use clap::Parser;
 use smithay::{
     backend::{
         renderer::{Format, ImportAll, Renderer},
@@ -24,10 +25,34 @@ mod gamemode;
 use compositor::GameFrameCompositor;
 use gui::GameFrameGui;
 
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// Rozdzielczość w formacie WxH, np. 1920x1080
+    resolution: String,
+    /// Jakość skalowania: 4k, high, low
+    quality: String,
+    /// Dodatkowe opcje: ++ (wszystkie), +vk (vkBasalt), +hud (MangoHud), +gm (GameMode)
+    #[arg(default_value = "")]
+    options: String,
+    /// Aplikacja do uruchomienia, np. "steam -gamepadui"
+    #[arg(default_value = "")]
+    application: String,
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Inicjalizacja logowania
+    env_logger::init();
+
+    // Parsowanie argumentów
+    let args = Args::parse();
+    let (width, height) = parse_resolution(&args.resolution)?;
+    let quality = parse_quality(&args.quality);
+    let (use_vkbasalt, use_mangohud, use_gamemode) = parse_options(&args.options);
+
     // Inicjalizacja Wayland
     let mut display = Display::new()?;
-    let mut compositor = GameFrameCompositor::new(&mut display);
+    let mut compositor = GameFrameCompositor::new(&mut display, width, height, quality);
 
     // Backend Winit dla Wayland
     let (mut winit_backend, mut winit_input) = WinitBackend::new()?;
@@ -37,13 +62,24 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let x11_backend = X11Backend::new()?;
     let x11_display = x11_backend.display();
 
-    // Inicjalizacja GUI (opcjonalne)
-    let mut gui = GameFrameGui::new();
+    // Inicjalizacja integracji
+    if use_vkbasalt {
+        vkbasalt::init_vkbasalt()?;
+    }
+    if use_mangohud {
+        mangohud::init_mangohud()?;
+    }
+    if use_gamemode {
+        gamemode::start_gamemode()?;
+    }
 
-    // Inicjalizacja vkBasalt, MangoHud, GameMode
-    vkbasalt::init_vkbasalt()?;
-    mangohud::init_mangohud()?;
-    gamemode::start_gamemode()?;
+    // Uruchomienie aplikacji (np. Steam)
+    if !args.application.is_empty() {
+        steam::launch_application(&args.application)?;
+    }
+
+    // Inicjalizacja GUI (opcjonalne)
+    let mut gui = GameFrameGui::new(quality);
 
     // Główna pętla zdarzeń
     loop {
@@ -58,7 +94,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             WinitEvent::CloseRequested => {
                 println!("Zamykanie aplikacji");
-                gamemode::stop_gamemode()?;
+                if use_gamemode {
+                    gamemode::stop_gamemode()?;
+                }
                 break;
             }
             _ => {}
@@ -69,12 +107,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         // Renderowanie z vkBasalt
         renderer.render(|renderer, frame| {
-            vkbasalt::apply_post_processing(renderer, frame)?;
+            if use_vkbasalt {
+                vkbasalt::apply_post_processing(renderer, frame)?;
+            }
             Ok(())
         })?;
 
-        // Monitorowanie wydajności z MangoHud
-        mangohud::update_hud()?;
+        // Aktualizacja MangoHud
+        if use_mangohud {
+            mangohud::update_hud()?;
+        }
 
         // Optymalizacja AI
         ai::optimize_game(&compositor)?;
@@ -84,4 +126,36 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     Ok(())
+}
+
+fn parse_resolution(res: &str) -> Result<(i32, i32), Box<dyn std::error::Error>> {
+    let parts: Vec<&str> = res.split('x').collect();
+    if parts.len() != 2 {
+        return Err("Nieprawidłowy format rozdzielczości (oczekiwano WxH)".into());
+    }
+    let width: i32 = parts[0].parse()?;
+    let height: i32 = parts[1].parse()?;
+    Ok((width, height))
+}
+
+fn parse_quality(quality: &str) -> String {
+    match quality.to_lowercase().as_str() {
+        "4k" => "FSR".to_string(),
+        "high" => "Bilinear".to_string(),
+        "low" => "Integer".to_string(),
+        _ => "FSR".to_string(), // Domyślne
+    }
+}
+
+fn parse_options(options: &str) -> (bool, bool, bool) {
+    let options = options.to_lowercase();
+    if options.contains("++") {
+        (true, true, true) // Włącz wszystko
+    } else {
+        (
+            options.contains("+vk"),
+            options.contains("+hud"),
+            options.contains("+gm"),
+        )
+    }
 }

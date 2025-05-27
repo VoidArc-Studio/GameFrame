@@ -4,7 +4,7 @@
 RESOLUTION="1920x1080"
 QUALITY="4k"
 OPTIONS=""
-APP=""
+APP="steam -gamepadui"
 
 # Parsowanie argumentów
 while [[ "$#" -gt 0 ]]; do
@@ -25,6 +25,8 @@ if ! [[ $RESOLUTION =~ ^[0-9]+x[0-9]+$ ]]; then
 fi
 
 # Ustawienie zmiennych środowiskowych
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+export WAYLAND_DISPLAY=wayland-0
 if [[ $OPTIONS == *"++"* || $OPTIONS == *"+vk"* ]]; then
     export ENABLE_VKBASALT=1
     export VKBASALT_CONFIG_FILE=~/.config/gameframe/vkbasalt.conf

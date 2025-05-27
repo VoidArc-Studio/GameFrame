@@ -7,14 +7,14 @@ pub struct GameFrameGui {
 }
 
 impl GameFrameGui {
-    pub fn new() -> Self {
+    pub fn new(quality: String) -> Self {
         GameFrameGui {
-            scaling_method: "FSR".to_string(),
+            scaling_method: quality,
             fps_limit: 60,
         }
     }
 
-    pub fn render<R: Renderer>(&mut self, renderer: &mut R) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn render<R: Renderer>(&mut self, _renderer: &mut R) -> Result<(), Box<dyn std::error::Error>> {
         let ctx = Context::default();
         CentralPanel::default().show(&ctx, |ui| {
             ui.heading("GameFrame - Lossless Scaling");
@@ -23,8 +23,8 @@ impl GameFrameGui {
                 .selected_text(&self.scaling_method)
                 .show_ui(ui, |ui| {
                     ui.selectable_value(&mut self.scaling_method, "FSR".to_string(), "FSR");
-                    ui.selectable_value(&mut self.scaling_method, "NIS".to_string(), "NIS");
                     ui.selectable_value(&mut self.scaling_method, "Bilinear".to_string(), "Bilinear");
+                    ui.selectable_value(&mut self.scaling_method, "Integer".to_string(), "Integer");
                 });
             ui.label("Limit FPS:");
             egui::ComboBox::from_label("Wybierz")
@@ -34,14 +34,8 @@ impl GameFrameGui {
                     ui.selectable_value(&mut self.fps_limit, 60, "60");
                     ui.selectable_value(&mut self.fps_limit, 120, "120");
                 });
-            if ui.button("Uruchom GameFrame").clicked() {
-                println!("Uruchamianie z skalowaniem: {}, FPS: {}", self.scaling_method, self.fps_limit);
-                // Wywołanie skryptu Bash z parametrami
-                std::process::Command::new("bash")
-                    .arg("../scripts/launch.sh")
-                    .arg("--scaling").arg(&self.scaling_method)
-                    .arg("--fps").arg(self.fps_limit.to_string())
-                    .spawn()?;
+            if ui.button("Zastosuj").clicked() {
+                println!("Zastosowano: Skalowanie: {}, FPS: {}", self.scaling_method, self.fps_limit);
             }
         });
         Ok(())

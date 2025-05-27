@@ -22,11 +22,9 @@ pub fn select_renderer(gpu: &str) -> Result<(), Box<dyn std::error::Error>> {
     match gpu {
         "NVIDIA" | "AMD" => {
             println!("Wybrano renderer Vulkan dla {}", gpu);
-            // Inicjalizacja Vulkan (ash)
         }
         "Intel" => {
             println!("Wybrano renderer OpenGL dla {}", gpu);
-            // Fallback na OpenGL
         }
         _ => {
             println!("Nieznany GPU, domyślny renderer: Vulkan");

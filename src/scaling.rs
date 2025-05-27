@@ -8,15 +8,12 @@ pub fn apply_scaling(
     match quality {
         "FSR" => {
             println!("Zastosowano skalowanie FSR");
-            // Implementacja FSR (Vulkan)
         }
         "Bilinear" => {
             println!("Zastosowano skalowanie Bilinear");
-            // Implementacja bilinearnego skalowania
         }
         "Integer" => {
             println!("Zastosowano skalowanie Integer");
-            // Implementacja integer scaling
         }
         _ => {
             println!("Domyślne skalowanie: FSR");

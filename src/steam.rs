@@ -7,6 +7,7 @@ pub fn launch_application(app: &str) -> Result<(), Box<dyn std::error::Error>> {
     Command::new(cmd)
         .args(cmd_args)
         .env("SDL_VIDEODRIVER", "wayland")
+        .env("STEAM_FORCE_DESKTOPUI_SCALING", "1")
         .spawn()
         .expect("Nie udało się uruchomić aplikacji");
     Ok(())
